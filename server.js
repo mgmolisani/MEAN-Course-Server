@@ -5,11 +5,13 @@ const session = require('express-session');
 const sectionService = require('./services/section.service');
 const userService = require('./services/user.service');
 
-mongoose.connect('mongodb://localhost/CS5610CourseManagerMongoDB');
+mongoose.connect(
+    process.env.MONGODB_URI ? process.env.MONGODB_URI : 'mongodb://localhost/CS5610CourseManagerMongoDB'
+);
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
     resave: false,
@@ -17,7 +19,7 @@ app.use(session({
     secret: 'App secret'
 }));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin",
         "*");
     res.header("Access-Control-Allow-Headers",
@@ -46,4 +48,6 @@ app.get('/api/session/get/:name', getSession);
 sectionService(app);
 userService(app);
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'));
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => console.log('Example app listening on port ' + port + '!'));
