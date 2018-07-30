@@ -6,7 +6,7 @@ function createUser(req, res) {
     userModel.createUser(user)
         .then(function (user) {
             req.session['currentUser'] = user;
-            res.send(user);
+            res.json(user);
         })
 }
 
